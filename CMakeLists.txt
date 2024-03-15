@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(Lua VERSION 5.2.4 LANGUAGES C)
+project(Lua VERSION 5.4.6 LANGUAGES C)
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/luaconf.h")
   message(FATAL_ERROR "Run \"cmake -P prepare-sources.cmake\" and change dirs.")
@@ -13,8 +13,8 @@ set(LUA_TO_INC lua.h luaconf.h lualib.h lauxlib.h lua.hpp)
 set(LUA_CORE_SOURCES lapi.c lcode.c lctype.c ldebug.c ldo.c ldump.c lfunc.c
   lgc.c llex.c lmem.c lobject.c lopcodes.c lparser.c lstate.c lstring.c ltable.c
   ltm.c lundump.c lvm.c lzio.c)
-set(LUA_LIB_SOURCES lauxlib.c lbaselib.c lbitlib.c lcorolib.c ldblib.c liolib.c
-  lmathlib.c loslib.c lstrlib.c ltablib.c loadlib.c linit.c)
+set(LUA_LIB_SOURCES lauxlib.c lbaselib.c lcorolib.c ldblib.c liolib.c
+  lmathlib.c loslib.c lstrlib.c ltablib.c loadlib.c linit.c lutf8lib.c)
 set(LUA_SOURCES)
 foreach(_src IN LISTS LUA_CORE_SOURCES LUA_LIB_SOURCES)
   list(APPEND LUA_SOURCES "src/${_src}")
@@ -107,10 +107,12 @@ else()
 endif()
 
 if(WIN32)
-  if(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
-    set(name lua-${PROJECT_VERSION}-unicode-win32)
-  elseif(CMAKE_GENERATOR_PLATFORM STREQUAL "x64")
-    set(name lua-${PROJECT_VERSION}-unicode-win64)
+  if(CMAKE_GENERATOR_PLATFORM STREQUAL "x64")
+    set(name lua-${PROJECT_VERSION}-unicode-x64-windows)
+  elseif(CMAKE_GENERATOR_PLATFORM STREQUAL "arm64")
+    set(name lua-${PROJECT_VERSION}-unicode-arm64-windows)
+  elseif(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
+    set(name lua-${PROJECT_VERSION}-unicode-x86-windows)
   else()
     message(FATAL_ERROR "Unexpected generator platform")
   endif()
